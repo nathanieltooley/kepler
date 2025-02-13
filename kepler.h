@@ -15,7 +15,7 @@
 #define KEP_ALLOC malloc
 #define KEP_FREE free
 
-#define KEP_COMPILER "cc"
+#define KEP_COMPILER "clang"
 
 // 100 MB
 // im pretty sure this should be fine through malloc
@@ -74,6 +74,7 @@ typedef struct {
     char *name;
 
     bool dynamic;
+    bool system;
 } kep_lib;
 
 typedef struct {
@@ -165,6 +166,7 @@ kep_cstrs kep_create_cstrs(size_t len, ...);
 
 kep_exe kep_create_exe(char *name, kep_cstrs srcs, kep_cstrs includes);
 kep_lib kep_create_lib(char *name, kep_cstrs srcs, char *path);
+kep_lib kep_create_syslib(char *name);
 void kep_link_libraries(kep_exe *exe, kep_libs libs);
 int kep_build_lib(kep_lib lib);
 int kep_build_exe(kep_exe art);
@@ -401,6 +403,14 @@ kep_lib kep_create_lib(char *name, kep_cstrs srcs, char *path) {
     lib.name = name;
     lib.path = path;
     lib.dynamic = false;
+
+    return lib;
+}
+
+kep_lib kep_create_syslib(char *name) {
+    kep_lib lib;
+    lib.name = name;
+    lib.path = NULL;
 
     return lib;
 }
